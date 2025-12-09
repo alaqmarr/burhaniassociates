@@ -9,6 +9,18 @@ interface Brand {
     _count: { products: number }
 }
 
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+    title: 'Our Brands | Burhani Associates',
+    description: 'Authorized Dealer for premium industrial brands: Clamptek, Swiftin, Kipp, Elesa+Ganter, and more. Authentic parts in Hyderabad.',
+    openGraph: {
+        title: 'Industrial Brands | Burhani Associates',
+        description: 'Partnered with global leaders in engineering components.',
+        url: 'https://burhaniassociates.com/brands',
+    }
+}
+
 async function getBrands(): Promise<Brand[]> {
     try {
         const brands = await prisma.brand.findMany({

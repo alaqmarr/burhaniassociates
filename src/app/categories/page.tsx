@@ -9,6 +9,18 @@ interface Category {
     _count: { products: number }
 }
 
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+    title: 'Product Categories | Burhani Associates',
+    description: 'Explore our wide range of industrial components: Toggle Clamps, Handwheels, Knobs, Vibration Mounts, and Levelling Feet.',
+    openGraph: {
+        title: 'Product Categories | Burhani Associates',
+        description: 'Comprehensive industrial catalog for all engineering needs.',
+        url: 'https://burhaniassociates.com/categories',
+    }
+}
+
 async function getCategories(): Promise<Category[]> {
     try {
         // Fetch all categories with product count

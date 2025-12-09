@@ -62,7 +62,7 @@ export default function EnquiryPopup({ isOpen, onClose, productName }: EnquiryPo
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                    className="absolute inset-0 bg-black/80 backdrop-blur-sm"
                     onClick={onClose}
                 />
 
@@ -71,128 +71,108 @@ export default function EnquiryPopup({ isOpen, onClose, productName }: EnquiryPo
                     initial={{ opacity: 0, scale: 0.95, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                    className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
+                    className="relative bg-white border border-border md:w-[500px] w-full max-w-lg shadow-xl"
                 >
                     {/* Header */}
-                    <div className="bg-gradient-to-r from-[#102a43] to-[#243b53] p-6 text-white">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <h3 className="text-xl font-bold">Enquire Now</h3>
-                                {productName && (
-                                    <p className="text-sm text-white/70 mt-1">{productName}</p>
-                                )}
-                            </div>
-                            <button
-                                onClick={onClose}
-                                className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors"
-                            >
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
+                    <div className="bg-primary p-6 flex items-start justify-between border-b border-primary-foreground/10">
+                        <div>
+                            <h3 className="text-xl font-heading font-bold text-white uppercase tracking-wider">
+                                Enquire Now
+                            </h3>
+                            {productName && (
+                                <p className="text-sm text-white/80 mt-1 font-sans font-light border-l-2 border-accent pl-2">
+                                    {productName}
+                                </p>
+                            )}
                         </div>
+                        <button
+                            onClick={onClose}
+                            className="text-white/70 hover:text-white transition-colors"
+                        >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                     </div>
 
                     {/* Form */}
-                    <form onSubmit={handleSubmit} className="p-6 space-y-4">
+                    <form onSubmit={handleSubmit} className="p-8 space-y-6">
                         {status === 'success' ? (
                             <div className="text-center py-8">
-                                <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+                                <div className="w-16 h-16 bg-green-100 flex items-center justify-center mx-auto mb-4 border border-green-200">
                                     <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                     </svg>
                                 </div>
-                                <h4 className="text-lg font-semibold text-gray-900 mb-2">Enquiry Sent!</h4>
-                                <p className="text-sm text-gray-500">We&apos;ll get back to you shortly.</p>
+                                <h4 className="text-xl font-heading font-bold text-primary uppercase mb-2">Enquiry Sent Successfully</h4>
+                                <p className="text-muted-foreground font-sans">We&apos;ll get back to you shortly regarding your requirements.</p>
                             </div>
                         ) : (
                             <>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="form-label">Name *</label>
+                                <div className="grid grid-cols-2 gap-6">
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Name *</label>
                                         <input
                                             type="text"
                                             name="name"
                                             value={formData.name}
                                             onChange={handleChange}
                                             required
-                                            className="form-input"
-                                            placeholder="Your name"
+                                            className="w-full px-3 py-2 bg-secondary/10 border border-border focus:border-accent outline-none transition-colors"
+                                            placeholder="Your Name"
                                         />
                                     </div>
-                                    <div>
-                                        <label className="form-label">Phone *</label>
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Phone *</label>
                                         <input
                                             type="tel"
                                             name="phone"
                                             value={formData.phone}
                                             onChange={handleChange}
                                             required
-                                            className="form-input"
-                                            placeholder="+91 98765 43210"
+                                            className="w-full px-3 py-2 bg-secondary/10 border border-border focus:border-accent outline-none transition-colors"
+                                            placeholder="Phone Number"
                                         />
                                     </div>
                                 </div>
 
-                                <div>
-                                    <label className="form-label">Email *</label>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Email *</label>
                                     <input
                                         type="email"
                                         name="email"
                                         value={formData.email}
                                         onChange={handleChange}
                                         required
-                                        className="form-input"
-                                        placeholder="you@company.com"
+                                        className="w-full px-3 py-2 bg-secondary/10 border border-border focus:border-accent outline-none transition-colors"
+                                        placeholder="Email Address"
                                     />
                                 </div>
 
-                                <div>
-                                    <label className="form-label">Company</label>
-                                    <input
-                                        type="text"
-                                        name="company"
-                                        value={formData.company}
-                                        onChange={handleChange}
-                                        className="form-input"
-                                        placeholder="Company name (optional)"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="form-label">Message</label>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Message</label>
                                     <textarea
                                         name="message"
                                         value={formData.message}
                                         onChange={handleChange}
-                                        rows={3}
-                                        className="form-input form-textarea"
-                                        placeholder="Tell us about your requirements..."
+                                        rows={4}
+                                        className="w-full px-3 py-2 bg-secondary/10 border border-border focus:border-accent outline-none transition-colors resize-none"
+                                        placeholder="Please detail your quantity and specification requirements..."
                                     />
                                 </div>
 
                                 {status === 'error' && (
-                                    <p className="text-sm text-red-600 text-center">
-                                        Something went wrong. Please try again.
-                                    </p>
+                                    <div className="p-3 bg-red-50 border-l-4 border-red-500 text-red-700 text-sm">
+                                        Failed to submit. Please try contacting us directly: <span className="font-bold">040-2780-8786</span>
+                                    </div>
                                 )}
 
                                 <button
                                     type="submit"
                                     disabled={status === 'loading'}
-                                    className="btn btn-accent w-full py-3 disabled:opacity-50"
+                                    className="w-full btn btn-primary py-3 uppercase tracking-wider font-bold"
                                 >
-                                    {status === 'loading' ? (
-                                        <span className="flex items-center justify-center gap-2">
-                                            <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                                            </svg>
-                                            Sending...
-                                        </span>
-                                    ) : (
-                                        'Send Enquiry'
-                                    )}
+                                    {status === 'loading' ? 'Processing...' : 'Submit Enquiry'}
                                 </button>
                             </>
                         )}

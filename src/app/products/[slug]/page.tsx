@@ -35,9 +35,41 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         return { title: 'Product Not Found | Burhani Associates' }
     }
 
+    const title = `${product.name} | Burhani Associates`
+    const description = product.description
+        ? product.description.replace(/<[^>]*>/g, '').substring(0, 160) // Strip HTML for SEO description
+        : `Buy ${product.name} - Authorized Dealer for ${product.brand?.name || 'Industrial Components'} in Hyderabad.`
+
+    const images = product.images.map(img => img.url)
+
     return {
-        title: `${product.name} | Burhani Associates`,
-        description: product.description?.substring(0, 160) || `Buy ${product.name} from Burhani Associates Hyderabad.`,
+        title,
+        description,
+        keywords: [
+            product.name,
+            product.brand?.name || '',
+            product.category?.name || '',
+            'Industrial Components',
+            'Hyderabad',
+            'Burhani Associates',
+        ].filter(Boolean),
+        openGraph: {
+            title,
+            description,
+            type: 'website', // or 'article'/'product' if available in Next.js metadata types properly, 'website' is safe default
+            url: `https://burhaniassociates.com/products/${product.id}`,
+            images: images.length > 0 ? images : undefined,
+            siteName: 'Burhani Associates',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title,
+            description,
+            images: images.length > 0 ? images : undefined,
+        },
+        alternates: {
+            canonical: `https://burhaniassociates.com/products/${product.id}`,
+        }
     }
 }
 

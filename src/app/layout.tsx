@@ -17,8 +17,45 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "Burhani Associates | Industrial Components Hyderabad",
-  description: "Authorized Dealer for Clamptek, Swiftin, and industrial machinery parts in Hyderabad. Toggle Clamps, Handwheels, Vibration Mounts.",
+  metadataBase: new URL('https://burhaniassociates.com'), // Replace with actual domain when live, using localhost or vercel url for now if needed, but production URL is best practice
+  title: {
+    default: 'Burhani Associates | Industrial Components Hyderabad',
+    template: '%s | Burhani Associates',
+  },
+  description: 'Authorized Dealer for Clamptek, Swiftin, and industrial machinery parts in Hyderabad. Toggle Clamps, Handwheels, Vibration Mounts, Clamping Elements.',
+  keywords: ['Industrial Components', 'Toggle Clamps', 'Handwheels', 'Vibration Mounts', 'Clamptek', 'Swiftin', 'Hyderabad', 'Secunderabad', 'Ranigunj', 'Industrial Machinery Parts', 'Burhani Associates'],
+  authors: [{ name: 'Burhani Associates' }],
+  creator: 'Burhani Associates',
+  publisher: 'Burhani Associates',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  openGraph: {
+    title: 'Burhani Associates | Premier Industrial Components',
+    description: 'Your trusted partner for high-quality industrial machine parts, toggle clamps, and engineering solutions in Hyderabad.',
+    url: 'https://burhaniassociates.com',
+    siteName: 'Burhani Associates',
+    locale: 'en_IN',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Burhani Associates | Industrial Components',
+    description: 'Top quality industrial parts in Hyderabad. Clamptek & Swiftin Authorized Dealer.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export default function RootLayout({
@@ -32,7 +69,7 @@ export default function RootLayout({
         className={`${oswald.variable} ${roboto.variable} antialiased font-sans`}
       >
         <Header />
-        <main className="min-h-screen bg-slate-50">
+        <main className="min-h-screen bg-slate-50 pt-20">
           {children}
         </main>
         <Footer />

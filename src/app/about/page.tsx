@@ -1,9 +1,15 @@
+
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-    title: 'Company Profile | Burhani Associates',
-    description: 'Since 2000, Burhani Associates has been Hyderabad\'s trusted supplier of industrial toggle clamps, vibration mounts, and machine accessories.',
+    title: 'About Us | Burhani Associates',
+    description: 'Since 2003, Burhani Associates has been a trusted supplier of industrial components in Hyderabad. Authorized dealers for Clamptek, Swiftin, and more.',
+    openGraph: {
+        title: 'About Burhani Associates | Industrial Legacy',
+        description: 'Helping industries in Hyderabad since 2003 with quality engineering components.',
+        url: 'https://burhaniassociates.com/about',
+    }
 }
 
 export default function AboutPage() {

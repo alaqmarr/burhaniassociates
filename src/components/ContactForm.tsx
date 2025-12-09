@@ -51,8 +51,8 @@ export default function ContactForm() {
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
-                <div className="form-group">
-                    <label htmlFor="name" className="form-label">Full Name *</label>
+                <div className="space-y-2">
+                    <label htmlFor="name" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Full Name *</label>
                     <input
                         type="text"
                         id="name"
@@ -60,12 +60,12 @@ export default function ContactForm() {
                         value={formData.name}
                         onChange={handleChange}
                         required
-                        className="form-input"
-                        placeholder="Enter your full name"
+                        className="w-full px-4 py-3 bg-secondary/10 border border-border focus:border-accent outline-none transition-colors"
+                        placeholder="Ex: John Doe"
                     />
                 </div>
-                <div className="form-group">
-                    <label htmlFor="email" className="form-label">Email Address *</label>
+                <div className="space-y-2">
+                    <label htmlFor="email" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Email Address *</label>
                     <input
                         type="email"
                         id="email"
@@ -73,34 +73,34 @@ export default function ContactForm() {
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        className="form-input"
-                        placeholder="you@company.com"
+                        className="w-full px-4 py-3 bg-secondary/10 border border-border focus:border-accent outline-none transition-colors"
+                        placeholder="Ex: john@company.com"
                     />
                 </div>
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
-                <div className="form-group">
-                    <label htmlFor="phone" className="form-label">Phone Number</label>
+                <div className="space-y-2">
+                    <label htmlFor="phone" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Phone Number</label>
                     <input
                         type="tel"
                         id="phone"
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
-                        className="form-input"
-                        placeholder="+91 98765 43210"
+                        className="w-full px-4 py-3 bg-secondary/10 border border-border focus:border-accent outline-none transition-colors"
+                        placeholder="Ex: +91 98765 43210"
                     />
                 </div>
-                <div className="form-group">
-                    <label htmlFor="subject" className="form-label">Subject *</label>
+                <div className="space-y-2">
+                    <label htmlFor="subject" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Subject *</label>
                     <select
                         id="subject"
                         name="subject"
                         value={formData.subject}
                         onChange={handleChange}
                         required
-                        className="form-input form-select"
+                        className="w-full px-4 py-3 bg-secondary/10 border border-border focus:border-accent outline-none transition-colors appearance-none"
                     >
                         <option value="">Select a topic</option>
                         <option value="General Inquiry">General Inquiry</option>
@@ -112,8 +112,8 @@ export default function ContactForm() {
                 </div>
             </div>
 
-            <div className="form-group">
-                <label htmlFor="message" className="form-label">Message *</label>
+            <div className="space-y-2">
+                <label htmlFor="message" className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Message *</label>
                 <textarea
                     id="message"
                     name="message"
@@ -121,7 +121,7 @@ export default function ContactForm() {
                     onChange={handleChange}
                     required
                     rows={5}
-                    className="form-input form-textarea"
+                    className="w-full px-4 py-3 bg-secondary/10 border border-border focus:border-accent outline-none transition-colors"
                     placeholder="Tell us about your requirements..."
                 />
             </div>
@@ -129,7 +129,7 @@ export default function ContactForm() {
             <button
                 type="submit"
                 disabled={status === 'loading'}
-                className="btn btn-accent w-full py-4 text-base disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-4 bg-primary text-white font-bold uppercase tracking-wider hover:bg-primary/90 transition-colors disabled:opacity-70 disabled:cursor-not-allowed border border-transparent"
             >
                 {status === 'loading' ? (
                     <span className="flex items-center justify-center gap-2">
@@ -140,12 +140,12 @@ export default function ContactForm() {
                         Sending...
                     </span>
                 ) : (
-                    <>
+                    <span className="flex items-center justify-center gap-2">
                         Send Message
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                         </svg>
-                    </>
+                    </span>
                 )}
             </button>
 
@@ -153,15 +153,10 @@ export default function ContactForm() {
                 <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="p-5 rounded-xl bg-green-50 border border-green-200 text-center"
+                    className="p-4 bg-green-50 border-l-4 border-green-500 text-green-800"
                 >
-                    <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-3">
-                        <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                    </div>
-                    <h3 className="font-semibold text-green-800 mb-1">Message Sent Successfully!</h3>
-                    <p className="text-sm text-green-600">We&apos;ll get back to you within 24 hours.</p>
+                    <h3 className="font-bold uppercase text-sm mb-1">Message Sent</h3>
+                    <p className="text-sm">We&apos;ll get back to you within 24 hours.</p>
                 </motion.div>
             )}
 
@@ -169,15 +164,10 @@ export default function ContactForm() {
                 <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="p-5 rounded-xl bg-red-50 border border-red-200 text-center"
+                    className="p-4 bg-red-50 border-l-4 border-red-500 text-red-800"
                 >
-                    <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-3">
-                        <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </div>
-                    <h3 className="font-semibold text-red-800 mb-1">Something went wrong</h3>
-                    <p className="text-sm text-red-600">{errorMessage}</p>
+                    <h3 className="font-bold uppercase text-sm mb-1">Error</h3>
+                    <p className="text-sm">{errorMessage}</p>
                 </motion.div>
             )}
         </form>
