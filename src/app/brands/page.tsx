@@ -3,14 +3,20 @@ import Link from 'next/link'
 import prisma from '@/lib/prisma'
 import BrandCard from '@/components/BrandCard'
 
-async function getBrands() {
+interface Brand {
+    id: string
+    name: string
+    _count: { products: number }
+}
+
+async function getBrands(): Promise<Brand[]> {
     try {
         const brands = await prisma.brand.findMany({
             include: { _count: { select: { products: true } } }
         })
         return brands
     } catch {
-        return [] as { id: string; name: string; _count: { products: number } }[]
+        return []
     }
 }
 
