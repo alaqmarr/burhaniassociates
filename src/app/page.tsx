@@ -1,54 +1,86 @@
 import React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import HeroCarousel from '@/components/HeroCarousel'
-import ProductCard from '@/components/ProductCard'
+import FeaturedCarousel from '@/components/FeaturedCarousel'
+import AboutSection from '@/components/AboutSection'
 import prisma from '@/lib/prisma'
 
-async function getFeaturedProducts() {
+// Helper to shuffle array
+function shuffleArray<T>(array: T[]): T[] {
+  const newArray = [...array]
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray
+}
+
+async function getRandomFeaturedProducts() {
   try {
+    // Fetch a larger batch of recent products to shuffle, keeping it performant
     const products = await prisma.product.findMany({
-      take: 4,
+      where: { status: 'PUBLISHED', isArchived: false },
+      take: 24, // Fetch pool
       orderBy: { createdAt: 'desc' },
       include: { brand: true, category: true, images: true }
     })
-    return products
+
+    // Randomize client-side (server-side generation time)
+    return shuffleArray(products).slice(0, 10)
   } catch {
     return [] as any[]
   }
 }
 
-const categories = [
-  {
-    name: 'Toggle Clamps',
-    slug: 'toggle-clamps',
-    description: 'Vertical, Horizontal, Push-Pull',
-    image: '/images/cat-clamps.png'
-  },
-  {
-    name: 'Handwheels',
-    slug: 'handwheels',
-    description: 'Bakelite, Spoke, Revolving Handles',
-    image: '/images/cat-handwheels.png'
-  },
-  {
-    name: 'Vibration Mounts',
-    slug: 'vibration-mounts',
-    description: 'Rubber Buffers, Anti-Vibration Pads',
-    image: '/images/cat-mounts.png'
-  },
-  {
-    name: 'Control Panel',
-    slug: 'control-panel',
-    description: 'Locks, Hinges, Keys',
-    image: '/images/cat-control.png'
-  },
-]
+async function getCategoriesWithImages() {
+  const targetCategories = [
+    { name: 'Toggle Clamps', slug: 'toggle-clamps', desc: 'Vertical, Horizontal, Push-Pull' },
+    { name: 'Handwheels', slug: 'handwheels', desc: 'Bakelite, Spoke, Revolving Handles' },
+    { name: 'Vibration Mounts', slug: 'vibration-mounts', desc: 'Rubber Buffers, Anti-Vibration Pads' },
+    { name: 'Control Panel', slug: 'control-panel', desc: 'Locks, Hinges, Keys' },
+  ]
+
+  const categoriesData = await Promise.all(targetCategories.map(async (cat) => {
+    // Try to find a product in this category that has an image
+    // Since we don't have slugs on Category model, we search by name loosely
+    const productWithImage = await prisma.product.findFirst({
+      where: {
+        category: {
+          name: { contains: cat.name, mode: 'insensitive' }
+        },
+        images: {
+          some: {
+            url: { contains: 'cloudinary', mode: 'insensitive' }
+          }
+        },
+        status: 'PUBLISHED'
+      },
+      select: {
+        images: {
+          where: { url: { contains: 'cloudinary', mode: 'insensitive' } },
+          take: 1
+        }
+      }
+    })
+
+    return {
+      ...cat,
+      image: productWithImage?.images[0]?.url || null // Fallback to null if no dynamic image found
+    }
+  }))
+
+  return categoriesData
+}
 
 export default async function Home() {
-  const products = await getFeaturedProducts()
+  const [products, categories] = await Promise.all([
+    getRandomFeaturedProducts(),
+    getCategoriesWithImages()
+  ])
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <HeroCarousel />
 
       {/* Brand Strip - Professional Industrial Look */}
@@ -66,15 +98,18 @@ export default async function Home() {
         </div>
       </div>
 
+      {/* About Section */}
+      <AboutSection />
+
       {/* Product Categories - Industrial Grid */}
-      <section className="section py-20 bg-white">
+      <section className="section py-20 bg-white border-t border-border">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-end mb-12 border-b-2 border-primary/10 pb-4">
             <div>
-              <h2 className="section-title">Core Products</h2>
+              <h2 className="section-title">Core Inventory</h2>
               <span className="section-subtitle">Precision Engineering Components</span>
             </div>
-            <Link href="/categories" className="btn btn-outline mt-4 md:mt-0">
+            <Link href="/products" className="btn btn-outline mt-4 md:mt-0">
               View All Categories
             </Link>
           </div>
@@ -89,15 +124,28 @@ export default async function Home() {
                 {/* Image Area - Technical Layout */}
                 <div className="h-56 bg-secondary relative overflow-hidden flex items-center justify-center border-b border-border">
                   <div className="absolute inset-0 bg-[url('/pattern-grid.svg')] opacity-10" />
-                  <svg className="w-16 h-16 text-primary/40 group-hover:text-accent transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
+
+                  {cat.image ? (
+                    <div className="relative w-full h-full p-8 group-hover:scale-105 transition-transform duration-500">
+                      <Image
+                        src={cat.image}
+                        alt={cat.name}
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
+                  ) : (
+                    <svg className="w-16 h-16 text-primary/40 group-hover:text-accent transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  )}
+
                   {/* Overlay Accent Line */}
                   <div className="absolute bottom-0 left-0 w-0 h-1 bg-accent group-hover:w-full transition-all duration-500" />
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl font-heading font-bold text-primary mb-2 uppercase">{cat.name}</h3>
-                  <p className="text-sm text-muted-foreground font-sans">{cat.description}</p>
+                  <p className="text-sm text-muted-foreground font-sans">{cat.desc}</p>
                 </div>
               </Link>
             ))}
@@ -105,9 +153,12 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Featured Products - Catalog Style */}
-      <section className="section py-20 bg-secondary/30">
-        <div className="container mx-auto px-4 lg:px-8">
+      {/* Featured Products - Carousel Style */}
+      <section className="section py-20 bg-secondary/30 relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-border/5 -skew-x-12 pointer-events-none" />
+
+        <div className="container mx-auto px-4 lg:px-8 relative z-10">
           <div className="mb-12 text-center">
             <h2 className="section-title text-center">Featured Inventory</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto mt-2">
@@ -115,28 +166,9 @@ export default async function Home() {
             </p>
           </div>
 
-          {products.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {products.map((product: any) => (
-                <ProductCard
-                  key={product.id}
-                  id={product.id}
-                  name={product.name}
-                  slug={product.id}
-                  description={product.description}
-                  images={product.images}
-                  brandName={product.brand?.name}
-                  categoryName={product.category?.name}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-16 bg-white border border-dashed border-border">
-              <p className="text-muted-foreground">Product catalog is being updated.</p>
-            </div>
-          )}
+          <FeaturedCarousel products={products} />
 
-          <div className="mt-16 text-center">
+          <div className="mt-12 text-center">
             <Link href="/products" className="btn btn-primary min-w-[240px]">
               View Full Catalog
             </Link>
@@ -144,7 +176,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* About / CTA - Corporate Footer Style */}
+      {/* Footer CTA Section */}
       <section className="py-20 bg-primary text-primary-foreground relative overflow-hidden">
         {/* Simple Geometric Accent */}
         <div className="absolute left-0 top-0 w-2 h-full bg-accent" />
@@ -155,8 +187,7 @@ export default async function Home() {
               <h2 className="text-4xl font-heading font-bold mb-6 text-white uppercase">Burhani Associates</h2>
               <div className="text-xl text-gray-300 font-light space-y-4 max-w-3xl">
                 <p>
-                  Your trusted partner for industrial excellence since 2000. Located in Ranigunj, Secunderabad,
-                  we specialize in providing top-tier clamping solutions, vibration isolation mounts, and machine accessories.
+                  Specialized in industrial machinery components. Visit our store for a hands-on experience with our diverse range of products.
                 </p>
               </div>
               <div className="mt-8 flex gap-8">

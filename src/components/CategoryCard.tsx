@@ -2,14 +2,16 @@
 
 import React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 interface CategoryCardProps {
     name: string
     count: number
     slug?: string
+    image?: string | null
 }
 
-export default function CategoryCard({ name, count, slug }: CategoryCardProps) {
+export default function CategoryCard({ name, count, slug, image }: CategoryCardProps) {
     const linkSlug = slug || name.toLowerCase().replace(/\s+/g, '-')
 
     return (
@@ -20,8 +22,17 @@ export default function CategoryCard({ name, count, slug }: CategoryCardProps) {
             {/* Decorative Corner Accent */}
             <div className="absolute top-0 right-0 w-8 h-8 bg-secondary -translate-y-4 translate-x-4 rotate-45 group-hover:bg-accent group-hover:translate-y-0 group-hover:translate-x-0 transition-all duration-300" />
 
-            <div className="w-16 h-16 mb-6 rounded-none bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
-                <span className="text-3xl font-heading font-bold">{name.charAt(0)}</span>
+            <div className="w-16 h-16 mb-6 rounded-none bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300 overflow-hidden relative">
+                {image ? (
+                    <Image
+                        src={image}
+                        alt={name}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                ) : (
+                    <span className="text-3xl font-heading font-bold relative z-10">{name.charAt(0)}</span>
+                )}
             </div>
 
             <h3 className="text-xl font-heading font-bold text-primary group-hover:text-accent transition-colors text-center uppercase tracking-wide">

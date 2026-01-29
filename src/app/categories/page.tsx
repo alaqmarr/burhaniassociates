@@ -23,9 +23,27 @@ export const metadata: Metadata = {
 
 async function getCategories(): Promise<Category[]> {
     try {
-        // Fetch all categories with product count
+        // Fetch all categories with product count and ONE random-ish product image (latest)
         const categories = await prisma.category.findMany({
-            include: { _count: { select: { products: true } } }
+            include: {
+                _count: { select: { products: true } },
+                products: {
+                    take: 1,
+                    where: {
+                        status: 'PUBLISHED',
+                        images: {
+                            some: { url: { contains: 'cloudinary', mode: 'insensitive' } }
+                        }
+                    },
+                    orderBy: { createdAt: 'desc' }, // Get latest product image as representative
+                    select: {
+                        images: {
+                            where: { url: { contains: 'cloudinary', mode: 'insensitive' } },
+                            take: 1
+                        }
+                    }
+                }
+            }
         })
         return categories
     } catch {
@@ -57,6 +75,8 @@ export default async function CategoriesPage() {
                             name={cat.name}
                             count={cat._count.products}
                             slug={cat.name.toLowerCase().replace(/\s+/g, '-')}
+                            // @ts-ignore - dynamic property check
+                            image={cat.products[0]?.images[0]?.url}
                         />
                     ))}
                 </div>
