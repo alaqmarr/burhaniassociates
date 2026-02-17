@@ -10,7 +10,7 @@ export default function HeroCarousel() {
                 <div className="max-w-4xl">
                     {/* Badge - Straight, Corporate */}
                     <div className="inline-block px-4 py-2 bg-accent/90 text-white font-bold text-sm tracking-widest mb-6 uppercase">
-                        Authorized Dealer Since 2000
+                        Authorized Industrial Dealer
                     </div>
 
                     <h1 className="text-5xl lg:text-7xl text-white font-bold mb-6 leading-tight font-heading uppercase">
@@ -20,7 +20,7 @@ export default function HeroCarousel() {
                     </h1>
 
                     <p className="text-xl text-gray-100 mb-10 max-w-2xl font-light font-sans tracking-wide leading-relaxed">
-                        Your comprehensive source for Clamptek Toggle Clamps, Swiftin Mounts, and Premium Control Panel Accessories in Hyderabad.
+                        Your comprehensive source for Clamptek Toggle Clamps, Anti-Vibration Mounts, and Premium Control Panel Accessories in Hyderabad.
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-4">

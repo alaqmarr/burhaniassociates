@@ -24,7 +24,7 @@ export default function AboutPage() {
 
                 <div className="container mx-auto px-4 lg:px-8 relative z-10">
                     <span className="inline-block py-1 px-3 bg-accent text-accent-foreground text-xs font-bold uppercase tracking-widest mb-6">
-                        Established 2000
+                        Authorized Dealer
                     </span>
                     <h1 className="text-5xl lg:text-7xl font-heading font-bold uppercase tracking-wide leading-tight mb-6">
                         Industrial <br />
@@ -54,11 +54,7 @@ export default function AboutPage() {
                                 </p>
                             </div>
 
-                            <div className="mt-10 pt-10 border-t border-border grid grid-cols-2 gap-8">
-                                <div>
-                                    <span className="block text-4xl font-heading font-bold text-accent mb-1">2000</span>
-                                    <span className="text-sm uppercase tracking-wider text-muted-foreground">Year Established</span>
-                                </div>
+                            <div className="mt-10 pt-10 border-t border-border grid grid-cols-1 gap-8">
                                 <div>
                                     <span className="block text-4xl font-heading font-bold text-accent mb-1">100%</span>
                                     <span className="text-sm uppercase tracking-wider text-muted-foreground">Genuine Parts</span>

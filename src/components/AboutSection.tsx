@@ -9,7 +9,7 @@ export default function AboutSection() {
                     {/* Content Side */}
                     <div className="lg:w-1/2 space-y-6">
                         <div>
-                            <span className="text-accent font-bold tracking-widest uppercase text-sm mb-2 block">Since 2000</span>
+                            <span className="text-accent font-bold tracking-widest uppercase text-sm mb-2 block">Our Story</span>
                             <h2 className="section-title text-left mb-6">Engineering Excellence & Precision</h2>
                             <p className="text-muted-foreground leading-relaxed text-lg">
                                 For over two decades, Burhani Associates has been the cornerstone of Hyderabad's industrial supply chain. We don't just supply parts; we provide the engineering backbone that keeps your machinery running.
@@ -47,10 +47,6 @@ export default function AboutSection() {
                             </p>
 
                             <div className="space-y-4 relative z-10">
-                                <div className="flex justify-between items-center border-b border-border pb-2">
-                                    <span className="text-sm font-bold text-gray-500 uppercase">Established</span>
-                                    <span className="text-primary font-heading font-bold">2000</span>
-                                </div>
                                 <div className="flex justify-between items-center border-b border-border pb-2">
                                     <span className="text-sm font-bold text-gray-500 uppercase">Location</span>
                                     <span className="text-primary font-heading font-bold">Secunderabad, Telangana</span>
