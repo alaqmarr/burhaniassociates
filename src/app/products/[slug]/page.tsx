@@ -9,6 +9,16 @@ interface Props {
     params: Promise<{ slug: string }>
 }
 
+export async function generateStaticParams() {
+    const products = await prisma.product.findMany({
+        where: { status: 'PUBLISHED' },
+        select: { id: true }
+    })
+    return products.map((product) => ({
+        slug: product.id,
+    }))
+}
+
 async function getProduct(slug: string) {
     try {
         const product = await prisma.product.findUnique({

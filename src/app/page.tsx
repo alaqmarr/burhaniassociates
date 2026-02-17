@@ -154,9 +154,9 @@ export default async function Home() {
       </section>
 
       {/* Featured Products - Carousel Style */}
-      <section className="section py-20 bg-secondary/30 relative overflow-hidden">
-        {/* Background decoration */}
-        <div className="absolute top-0 right-0 w-1/3 h-full bg-border/5 -skew-x-12 pointer-events-none" />
+      <section className="section py-20 bg-secondary/30 relative overflow-hidden border-t border-border">
+        {/* Clean Background - Solid */}
+
 
         <div className="container mx-auto px-4 lg:px-8 relative z-10">
           <div className="mb-12 text-center">

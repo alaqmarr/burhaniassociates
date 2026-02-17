@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation'
+import prisma from '@/lib/prisma'
 
 // We don't have a specific brand detail page design in the plan, 
 // usually clicking a brand goes to /products?brand=slug.
@@ -6,6 +7,13 @@ import { redirect } from 'next/navigation'
 
 interface Props {
     params: Promise<{ slug: string }>
+}
+
+export async function generateStaticParams() {
+    const brands = await prisma.brand.findMany({ select: { name: true } })
+    return brands.map((brand) => ({
+        slug: brand.name.toLowerCase().replace(/\s+/g, '-'),
+    }))
 }
 
 export default async function BrandDetailPage({ params }: Props) {

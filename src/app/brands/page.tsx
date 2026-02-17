@@ -11,6 +11,8 @@ interface Brand {
 
 import type { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
     title: 'Our Brands | Burhani Associates',
     description: 'Authorized Dealer for premium industrial brands: Clamptek, Swiftin, Kipp, Elesa+Ganter, and more. Authentic parts in Hyderabad.',

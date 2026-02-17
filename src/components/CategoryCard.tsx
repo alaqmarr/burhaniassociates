@@ -19,9 +19,6 @@ export default function CategoryCard({ name, count, slug, image }: CategoryCardP
             href={`/products?category=${encodeURIComponent(linkSlug)}`}
             className="group flex flex-col items-center justify-center p-8 bg-card border border-border hover:border-accent transition-all duration-300 relative overflow-hidden"
         >
-            {/* Decorative Corner Accent */}
-            <div className="absolute top-0 right-0 w-8 h-8 bg-secondary -translate-y-4 translate-x-4 rotate-45 group-hover:bg-accent group-hover:translate-y-0 group-hover:translate-x-0 transition-all duration-300" />
-
             <div className="w-16 h-16 mb-6 rounded-none bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300 overflow-hidden relative">
                 {image ? (
                     <Image

@@ -11,6 +11,8 @@ interface Category {
 
 import type { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
     title: 'Product Categories | Burhani Associates',
     description: 'Explore our wide range of industrial components: Toggle Clamps, Handwheels, Knobs, Vibration Mounts, and Levelling Feet.',
