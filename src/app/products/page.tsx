@@ -65,7 +65,31 @@ export default async function ProductsPage({ searchParams }: PageProps) {
     const params = await searchParams
     const products = await getProducts()
     const brands = await getBrands()
-    const categories = await getCategories()
+    const categoriesList = await getCategories()
+
+    // Custom Sort Order
+    const sortOrder = [
+        'panel lock',
+        'hinge',
+        'toggle clamp',
+        'cotton pin',
+        'cotter pin',
+        'vibration', // Matches Anti-Vibration and Vibration Mounts
+    ]
+
+    const categories = categoriesList.sort((a, b) => {
+        const aName = a.name.toLowerCase()
+        const bName = b.name.toLowerCase()
+
+        const aIndex = sortOrder.findIndex(key => aName.includes(key))
+        const bIndex = sortOrder.findIndex(key => bName.includes(key))
+
+        if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex
+        if (aIndex !== -1) return -1
+        if (bIndex !== -1) return 1
+
+        return aName.localeCompare(bName)
+    })
 
     // Filter Logic
     let displayProducts = products
