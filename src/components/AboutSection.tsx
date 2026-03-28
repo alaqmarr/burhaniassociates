@@ -1,7 +1,21 @@
 import React from 'react'
 import Link from 'next/link'
+import prisma from '@/lib/prisma'
 
-export default function AboutSection() {
+export default async function AboutSection() {
+    let brandNamesStr = 'Various Top Brands';
+    try {
+        const brands = await prisma.brand.findMany({
+            select: { name: true },
+            orderBy: { name: 'asc' }
+        });
+        if (brands.length > 0) {
+            brandNamesStr = brands.map(b => b.name).join(', ');
+        }
+    } catch {
+        // Fallback
+    }
+
     return (
         <section className="py-20 bg-white border-y border-border">
             <div className="container mx-auto px-4 lg:px-8">
@@ -53,7 +67,7 @@ export default function AboutSection() {
                                 </div>
                                 <div className="flex justify-between items-center border-b border-border pb-2">
                                     <span className="text-sm font-bold text-gray-500 uppercase">Core Brands</span>
-                                    <span className="text-primary font-heading font-bold">Clamptek, Swiftin, JGanter</span>
+                                    <span className="text-primary font-heading font-bold">{brandNamesStr}</span>
                                 </div>
                                 <div className="flex justify-between items-center border-b border-border pb-2">
                                     <span className="text-sm font-bold text-gray-500 uppercase">Inventory</span>

@@ -73,30 +73,77 @@ async function getCategoriesWithImages() {
   return categoriesData
 }
 
+async function getHeroImages() {
+  try {
+    const products = await prisma.product.findMany({
+      where: {
+        status: 'PUBLISHED',
+        isArchived: false,
+        images: {
+          some: {} // Check if product has any images
+        }
+      },
+      take: 30,
+      orderBy: { createdAt: 'desc' },
+      select: {
+        name: true,
+        images: {
+          take: 1
+        }
+      }
+    })
+
+    // Get unique images, shuffle, and take 8
+    const images = products
+      .filter(p => p.images.length > 0)
+      .map(p => ({ url: p.images[0].url, alt: p.name }))
+
+    return shuffleArray(images).slice(0, 8)
+  } catch {
+    return []
+  }
+}
+
+async function getBrands() {
+  try {
+    return await prisma.brand.findMany({
+      select: { id: true, name: true },
+      orderBy: { name: 'asc' }
+    });
+  } catch {
+    return [];
+  }
+}
+
 export default async function Home() {
-  const [products, categories] = await Promise.all([
+  const [products, categories, heroImages, brands] = await Promise.all([
     getRandomFeaturedProducts(),
-    getCategoriesWithImages()
+    getCategoriesWithImages(),
+    getHeroImages(),
+    getBrands()
   ])
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
-      <HeroCarousel />
+      <HeroCarousel heroImages={heroImages} />
 
       {/* Brand Strip - Professional Industrial Look */}
-      <div className="bg-secondary border-b border-border py-8">
-        <div className="container mx-auto px-4 lg:px-8">
-          <p className="text-center text-sm font-bold text-muted-foreground mb-6 uppercase tracking-widest">
-            Trusted by Engineering Units Across Telangana
-          </p>
-          <div className="flex flex-wrap justify-center items-center gap-12 lg:gap-24 opacity-80">
-            {/* Text Logos using Oswald font */}
-            <span className="text-3xl font-heading font-bold text-primary">CLAMPTEK</span>
-            <span className="text-3xl font-heading font-bold text-primary">SWIFTIN</span>
-            <span className="text-2xl font-heading font-bold text-gray-500">JGANTER</span>
+      {brands.length > 0 && (
+        <div className="bg-secondary border-b border-border py-8">
+          <div className="container mx-auto px-4 lg:px-8">
+            <p className="text-center text-sm font-bold text-muted-foreground mb-6 uppercase tracking-widest">
+              Trusted by Engineering Units Across Telangana
+            </p>
+            <div className="flex flex-wrap justify-center items-center gap-12 lg:gap-24 opacity-80">
+              {brands.map((b) => (
+                <span key={b.id} className="text-2xl md:text-3xl font-heading font-bold text-primary uppercase">
+                  {b.name}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* About Section */}
       <AboutSection />
