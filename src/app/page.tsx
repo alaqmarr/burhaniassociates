@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import HeroCarousel from '@/components/HeroCarousel'
+import PremiumHero from '@/components/PremiumHero'
 import FeaturedCarousel from '@/components/FeaturedCarousel'
 import AboutSection from '@/components/AboutSection'
 import prisma from '@/lib/prisma'
@@ -35,10 +35,10 @@ async function getRandomFeaturedProducts() {
 
 async function getCategoriesWithImages() {
   const targetCategories = [
-    { name: 'Toggle Clamps', slug: 'toggle-clamps', desc: 'Vertical, Horizontal, Push-Pull' },
-    { name: 'Handwheels', slug: 'handwheels', desc: 'Bakelite, Spoke, Revolving Handles' },
-    { name: 'Vibration Mounts', slug: 'vibration-mounts', desc: 'Rubber Buffers, Anti-Vibration Pads' },
-    { name: 'Control Panel', slug: 'control-panel', desc: 'Locks, Hinges, Keys' },
+    { name: 'Toggle Clamps', slug: 'toggle-clamps', desc: 'Vertical, Horizontal, Push-Pull', spanClass: 'lg:col-span-2 lg:row-span-2 min-h-[400px] lg:min-h-[600px]' },
+    { name: 'Handwheels', slug: 'handwheels', desc: 'Bakelite, Spoke, Revolving Handles', spanClass: 'lg:col-span-2 lg:row-span-1 min-h-[300px]' },
+    { name: 'Vibration Mounts', slug: 'vibration-mounts', desc: 'Rubber Buffers, Anti-Vibration Pads', spanClass: 'lg:col-span-1 lg:row-span-1 min-h-[300px]' },
+    { name: 'Control Panel', slug: 'control-panel', desc: 'Locks, Hinges, Keys', spanClass: 'lg:col-span-1 lg:row-span-1 min-h-[300px]' },
   ]
 
   const categoriesData = await Promise.all(targetCategories.map(async (cat) => {
@@ -123,20 +123,31 @@ export default async function Home() {
     getBrands()
   ])
 
+  // Duplicate brands array to make infinite marquee seamless if needed
+  const marqueeBrands = brands.length > 0 ? [...brands, ...brands, ...brands, ...brands] : []
+
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
-      <HeroCarousel heroImages={heroImages} />
+      <PremiumHero heroImages={heroImages} />
 
-      {/* Brand Strip - Professional Industrial Look */}
+      {/* Brand Strip - Infinite Marquee */}
       {brands.length > 0 && (
-        <div className="bg-secondary border-b border-border py-8">
-          <div className="container mx-auto px-4 lg:px-8">
-            <p className="text-center text-sm font-bold text-muted-foreground mb-6 uppercase tracking-widest">
-              Trusted by Engineering Units Across Telangana
-            </p>
-            <div className="flex flex-wrap justify-center items-center gap-12 lg:gap-24 opacity-80">
-              {brands.map((b) => (
-                <span key={b.id} className="text-2xl md:text-3xl font-heading font-bold text-primary uppercase">
+        <div className="bg-primary border-b border-white/10 py-6 overflow-hidden relative">
+          {/* Gradient overlays for smooth fading edges */}
+          <div className="absolute left-0 top-0 w-16 md:w-32 h-full bg-gradient-to-r from-primary to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 w-16 md:w-32 h-full bg-gradient-to-l from-primary to-transparent z-10 pointer-events-none" />
+          
+          <div className="flex w-[200%] animate-[marquee_40s_linear_infinite]">
+            <div className="flex w-1/2 justify-around items-center">
+              {marqueeBrands.slice(0, marqueeBrands.length / 2).map((b, i) => (
+                <span key={`${b.id}-${i}`} className="text-xl md:text-2xl font-heading font-black text-white/40 uppercase tracking-widest whitespace-nowrap px-8">
+                  {b.name}
+                </span>
+              ))}
+            </div>
+            <div className="flex w-1/2 justify-around items-center">
+              {marqueeBrands.slice(marqueeBrands.length / 2).map((b, i) => (
+                <span key={`${b.id}-${i}-copy`} className="text-xl md:text-2xl font-heading font-black text-white/40 uppercase tracking-widest whitespace-nowrap px-8">
                   {b.name}
                 </span>
               ))}
@@ -161,38 +172,43 @@ export default async function Home() {
             </Link>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 auto-rows-fr">
             {categories.map((cat, idx) => (
               <Link
                 key={idx}
                 href={`/products?category=${cat.slug}`}
-                className="group block bg-white border border-border hover:border-accent transition-all duration-300 relative"
+                className={`group block bg-gray-100 rounded-xl overflow-hidden relative shadow-md hover:shadow-2xl transition-all duration-500 ${cat.spanClass}`}
               >
-                {/* Image Area - Technical Layout */}
-                <div className="h-56 bg-secondary relative overflow-hidden flex items-center justify-center border-b border-border">
-                  <div className="absolute inset-0 bg-[url('/pattern-grid.svg')] opacity-10" />
-
-                  {cat.image ? (
-                    <div className="relative w-full h-full p-8 group-hover:scale-105 transition-transform duration-500">
-                      <Image
+                {/* Background Base */}
+                <div className="absolute inset-0 bg-white z-0" />
+                
+                {cat.image ? (
+                  <div className="absolute inset-0 flex items-center justify-center z-10 w-full h-full p-12">
+                    <div className="relative w-full h-full flex items-center justify-center">
+                        <Image
                         src={cat.image}
                         alt={cat.name}
                         fill
-                        className="object-contain"
-                      />
+                        className="object-contain p-4 group-hover:scale-110 transition-transform duration-700 ease-in-out mix-blend-multiply"
+                        />
                     </div>
-                  ) : (
-                    <svg className="w-16 h-16 text-primary/40 group-hover:text-accent transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  </div>
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center opacity-10 z-10">
+                    <svg className="w-32 h-32 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                  )}
-
-                  {/* Overlay Accent Line */}
-                  <div className="absolute bottom-0 left-0 w-0 h-1 bg-accent group-hover:w-full transition-all duration-500" />
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-heading font-bold text-primary mb-2 uppercase">{cat.name}</h3>
-                  <p className="text-sm text-muted-foreground font-sans">{cat.desc}</p>
+                  </div>
+                )}
+                
+                {/* Gradient Overlay for Text Visibility */}
+                <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/50 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500 z-20" />
+                
+                {/* Content Overlay */}
+                <div className="absolute bottom-0 left-0 w-full p-8 z-30 transform translate-y-0 lg:translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                  <div className="w-12 h-1 bg-accent mb-4 transform origin-left scale-x-50 group-hover:scale-x-100 transition-transform duration-300" />
+                  <h3 className="text-2xl lg:text-3xl font-heading font-black text-white mb-2 uppercase tracking-wide">{cat.name}</h3>
+                  <p className="text-sm lg:text-base text-gray-300 font-sans font-light lg:opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">{cat.desc}</p>
                 </div>
               </Link>
             ))}
